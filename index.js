@@ -14,7 +14,7 @@ app.use(express.json());
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://library11:DGbtAJdaLlUl4Nzy@library-management.x2cb2sv.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -34,12 +34,55 @@ async function run() {
         const database = client.db('libraryDB');
 
         const bookCollection = database.collection('allbooks');
+        const browBookColl = database.collection('borrowedbooks');
 
         app.post('/allbooks', async (req, res) => {
             const addbooks = req.body;
             console.log('New book:', addbooks);
             const addingBooks = await bookCollection.insertOne(addbooks);
             res.send(addingBooks);
+        })
+
+        app.get('/allbooks', async (req, res) => {
+            const books = bookCollection.find();
+            const bookresult = await books.toArray();
+            res.send(bookresult);
+        })
+
+        app.get('/allbooks/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const user = await bookCollection.findOne(query);
+            res.send(user);
+            console.log('update : ', user);
+        })
+
+        app.put('/allbooks/:id', async (req, res) => {
+            const id = req.params.id;
+            const user = req.body;
+            console.log(id, user);
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updatedUser = {
+                $set: {
+                    image: user.image,
+                    bookName: user.bookName,
+                    authorName: user.authorName,
+                    category: user.category,
+                    rating: user.rating
+                }
+            }
+            const result = await bookCollection.updateOne(filter, updatedUser, options);
+            res.send(result);
+        })
+
+
+
+        app.post('/borrowedbooks', async (req, res) => {
+            const browBooks = req.body;
+            console.log('New book:', browBooks);
+            const addingBrwBooks = await browBookColl.insertOne(browBooks);
+            res.send(addingBrwBooks);
         })
 
 
