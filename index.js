@@ -93,6 +93,13 @@ async function run() {
             res.send(addingBrwBooks);
         })
 
+        app.delete('/borrowedbooks/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await browBookColl.deleteOne(query);
+            res.send(result);
+        })
+
 
 
 
