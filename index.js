@@ -69,11 +69,19 @@ async function run() {
                     bookName: user.bookName,
                     authorName: user.authorName,
                     category: user.category,
-                    rating: user.rating
+                    rating: user.rating,
+                    amount: user.amount
                 }
             }
             const result = await bookCollection.updateOne(filter, updatedUser, options);
             res.send(result);
+        })
+
+
+        app.get('/borrowedbooks', async (req, res) => {
+            const getbooks = browBookColl.find();
+            const getbookresult = await getbooks.toArray();
+            res.send(getbookresult);
         })
 
 
