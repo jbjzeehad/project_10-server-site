@@ -1,7 +1,6 @@
 // DGbtAJdaLlUl4Nzy
 // library11
 
-
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -9,10 +8,6 @@ const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
-
-
-
-
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://library11:DGbtAJdaLlUl4Nzy@library-management.x2cb2sv.mongodb.net/?retryWrites=true&w=majority";
@@ -38,7 +33,7 @@ async function run() {
 
         app.post('/allbooks', async (req, res) => {
             const addbooks = req.body;
-            console.log('New book:', addbooks);
+            // console.log('New book:', addbooks);
             const addingBooks = await bookCollection.insertOne(addbooks);
             res.send(addingBooks);
         })
@@ -54,13 +49,13 @@ async function run() {
             const query = { _id: new ObjectId(id) }
             const user = await bookCollection.findOne(query);
             res.send(user);
-            console.log('update : ', user);
+            // console.log('update : ', user);
         })
 
         app.put('/allbooks/:id', async (req, res) => {
             const id = req.params.id;
             const user = req.body;
-            console.log(id, user);
+            // console.log(id, user);
             const filter = { _id: new ObjectId(id) };
             const options = { upsert: true };
             const updatedUser = {
@@ -77,18 +72,15 @@ async function run() {
             res.send(result);
         })
 
-
         app.get('/borrowedbooks', async (req, res) => {
             const getbooks = browBookColl.find();
             const getbookresult = await getbooks.toArray();
             res.send(getbookresult);
         })
 
-
-
         app.post('/borrowedbooks', async (req, res) => {
             const browBooks = req.body;
-            console.log('New book:', browBooks);
+            // console.log('New book:', browBooks);
             const addingBrwBooks = await browBookColl.insertOne(browBooks);
             res.send(addingBrwBooks);
         })
@@ -99,16 +91,6 @@ async function run() {
             const result = await browBookColl.deleteOne(query);
             res.send(result);
         })
-
-
-
-
-
-
-
-
-
-
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
